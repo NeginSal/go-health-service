@@ -3,12 +3,11 @@ FROM golang:1.24 AS builder
 WORKDIR /app
 
 COPY go.mod ./
-
 COPY . .
 
 RUN go build -o server ./cmd/server
 
-FROM alpine:latest
+FROM debian:bookworm-slim
 
 WORKDIR /app
 
