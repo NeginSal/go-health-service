@@ -5,7 +5,8 @@ WORKDIR /app
 COPY go.mod ./
 COPY . .
 
-RUN go build -o server ./cmd/server
+#RUN go build -o server ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/server
 
 FROM debian:bookworm-slim
 
