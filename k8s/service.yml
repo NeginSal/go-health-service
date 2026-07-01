@@ -3,10 +3,11 @@ kind: Service
 metadata:
   name: go-health-service
 spec:
-  type: NodePort 
+  # type: NodePort 
+  type: ClusterIP
   selector:
     app: go-health
   ports:
   - port: 80
     targetPort: 8080
-    nodePort: 30080
+    # nodePort: 30080
