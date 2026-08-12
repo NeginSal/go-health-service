@@ -1,0 +1,83 @@
+---
+# Source: go-health/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-health
+  labels:
+    helm.sh/chart: go-health-0.1.0
+    app.kubernetes.io/name: go-health
+    app.kubernetes.io/instance: go-health
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: go-health
+    app.kubernetes.io/instance: go-health
+
+---
+# Source: go-health/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: go-health
+  labels:
+    helm.sh/chart: go-health-0.1.0
+    app.kubernetes.io/name: go-health
+    app.kubernetes.io/instance: go-health
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: go-health
+      app.kubernetes.io/instance: go-health
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: go-health
+        app.kubernetes.io/instance: go-health
+
+    spec:
+      containers:
+        - name: go-health
+          image: "go-health-service:v4"
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+---
+# Source: go-health/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "go-health-test-connection"
+  labels:
+    helm.sh/chart: go-health-0.1.0
+    app.kubernetes.io/name: go-health
+    app.kubernetes.io/instance: go-health
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['go-health:80']
+  restartPolicy: Never
+
