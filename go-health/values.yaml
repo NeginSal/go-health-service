@@ -18,3 +18,7 @@ resources:
   limits:
     cpu: 500m
     memory: 256Mi
+
+config:
+  appEnv: "production"
+  logLevel: "info"
