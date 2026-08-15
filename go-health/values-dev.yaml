@@ -1,10 +1,6 @@
 replicaCount: 1
 
-image:
-  repository: go-health-service
-  tag: "v4"
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 80
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
