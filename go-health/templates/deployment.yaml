@@ -17,6 +17,7 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         {{- include "go-health.labels" . | nindent 8 }}
 
@@ -30,6 +31,13 @@ spec:
             - name: http
               containerPort: {{ .Values.containerPort }}
               protocol: TCP
+
+          env:
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: go-health-secret
+                  key: API_TOKEN
 
           envFrom:
             - configMapRef:
